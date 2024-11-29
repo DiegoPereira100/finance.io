@@ -1,0 +1,268 @@
+body {
+  overflow-x: hidden;
+}
+
+.main-container {
+  background-color: #181622;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.navbar {
+  background-color: #373639;
+  color: aliceblue;
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 30px;
+  margin-right: 30px;
+  gap: 2px;
+}
+
+.nav-title-container {
+  display: flex;
+  align-items: center;
+}
+
+.nav-logo {
+  width: 50px;
+  height: 50px;
+  color: #8cc73d;
+}
+
+.nav-links-container {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-links-container a {
+  font-size: 20px;
+}
+
+.nav-link {
+  font-size: 18px;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-block;
+  padding: 5px 10px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-link {
+  color: aliceblue !important;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #8cc73d !important;;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background-color: #8cc73d;
+  bottom: 0;
+  left: 0;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+  color: white;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.nav-right-icons-container {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-dots-icon,
+.nav-user-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.month-day-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.month-btn, .day-btn {
+  background-color: #8cc73d;
+  border: none;
+  color: white;
+  font-size: 20px;
+  padding: 5px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 0 10px;
+  border-radius: 2px;
+}
+
+.month-title, .day-title {
+  color: aliceblue;
+  font-size: 24px;
+  margin: 0;
+  text-align: center;
+}
+
+.month-btn:hover, .day-btn:hover {
+  background-color: #6ba72d;
+}
+
+.day-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.tname {
+  text-align: start;
+  background-color: #373639;
+}
+
+.table-container {
+  padding: 15px 40px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background-color: #373639;
+  margin-left: 80px;
+  margin-right: 80px;
+}
+
+.tablesT-container {
+  width: 100px;
+}
+
+.table {
+  width: 100%;
+  margin-top: 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(240, 248, 255, 0.048);
+}
+
+th, td {
+  text-align: center;
+  cursor: pointer;
+}
+
+.table1-title-style {
+  background-color: #f8f9fa;
+  color: #8cc73d !important;
+  font-weight: bold;
+  padding: 12px 15px;
+  text-align: start;
+  border-bottom: 3px solid #8cc73d;
+}
+
+.table2-title-style {
+  background-color: #f8f9fa;
+  color: #8cc73d !important;
+  font-weight: bold;
+  padding: 12px 15px;
+}
+
+.table-container-title {
+  color: aliceblue;
+  font-size: 20px;
+  margin-left: 30px;
+}
+
+.custom-card {
+  background-color: #373639 !important;
+  border-radius: 10px;
+  padding: 10px;
+  color: #fff !important;
+  height: 600px;
+  width: 300px;
+  margin-top: 75px;
+}
+
+.card-item {
+  font-size: 27px;
+  margin-bottom: 5px;
+  color: #8cc73d !important;
+}
+
+.card-value {
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff !important;
+}
+
+@media (max-width: 1278px) {
+  .custom-card {
+    width: 100%;
+    max-width: 350px;
+    margin-right: 20px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .custom-card {
+    width: 90%;
+    max-width: 250px;
+    height: auto;
+    margin-top: 20px;
+  }
+
+  .card-item {
+    font-size: 22px;
+  }
+
+  .card-value {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-card {
+    width: 80%;
+    max-width: 230px;
+    margin: 20px auto;
+    height: auto;
+  }
+
+  .card-item {
+    font-size: 20px;
+  }
+
+  .card-value {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .custom-card {
+    width: 70%;
+    max-width: 170px;
+    margin: 20px 0;
+    height: auto;
+  }
+
+  .card-item {
+    font-size: 18px;
+  }
+
+  .card-value {
+    font-size: 14px;
+  }
+}
