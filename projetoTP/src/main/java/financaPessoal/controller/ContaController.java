@@ -40,4 +40,51 @@ public class ContaController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(conta0.get());
     }
+    @PutMapping("/conta/{id}")
+    public ResponseEntity<Object> updateConta(@PathVariable(value = "id") UUID id,
+                                              @RequestBody @Valid ContaRecordDTO contaRecordDTO) {
+        Optional<ContaModel> contaO = contaRepository.findById(id);
+        if (contaO.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Conta não encontrada");
+        }
+        var contaModel = contaO.get();
+        BeanUtils.copyProperties(contaRecordDTO, contaModel);
+        return ResponseEntity.status(HttpStatus.OK).body(contaRepository.save(contaModel));
+    }
+
+    @DeleteMapping("/conta/{id}")
+    public ResponseEntity<Object> deleteConta(@PathVariable(value = "id") UUID id) {
+        Optional<ContaModel> contaOptional = contaRepository.findById(id);
+        if (contaOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Conta não encontrada");
+        }
+
+        contaRepository.delete(contaOptional.get());
+        return ResponseEntity.status(HttpStatus.OK).body("Conta excluída com sucesso");
+    }
+    @PostMapping("/conta/{id}/transacao")
+    public ResponseEntity<Object> addTransacao(@PathVariable UUID id, @RequestBody TransacaoModel transacao) {
+        Optional<ContaModel> contaOptional = contaRepository.findById(id);
+
+        if (contaOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Conta não encontrada.");
+        }
+
+        ContaModel conta = contaOptional.get();
+
+        if(transacao.getTipo().equals("receita")) {
+            conta.atualizarSaldo(transacao.getValor());
+        }
+       else if(transacao.getTipo().equals("despesa")){
+            conta.atualizarSaldo(-transacao.getValor());
+        }
+       else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tipo de transação não aceita");
+        }
+        transacao.setConta(conta);
+        conta.getTransacoes().add(transacao);
+
+        contaRepository.save(conta);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Transação adicionada com sucesso.");
+    }
 }

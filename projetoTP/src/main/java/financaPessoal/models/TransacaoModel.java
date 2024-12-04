@@ -1,5 +1,6 @@
 package financaPessoal.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -16,6 +17,18 @@ public class TransacaoModel implements Serializable {
     private double valor;
     private String tipo;
     private String data;
+    @ManyToOne
+    @JoinColumn(name = "conta_id", nullable = false)
+    @JsonBackReference
+    private ContaModel conta;
+
+    public ContaModel getConta() {
+        return conta;
+    }
+
+    public void setConta(ContaModel conta) {
+        this.conta = conta;
+    }
 
     public UUID getIdTransacao() {
         return idTransacao;
@@ -55,5 +68,13 @@ public class TransacaoModel implements Serializable {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+    public void atualizarSaldo(double valor, String tipo){
+        if(tipo.equals("despesa")) {
+            this.conta.atualizarSaldo(-valor);
+        }
+        else{
+            this.conta.atualizarSaldo(valor);
+        }
     }
 }
