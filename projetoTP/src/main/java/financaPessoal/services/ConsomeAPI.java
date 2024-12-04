@@ -44,7 +44,19 @@ public class ConsomeAPI {
     }
 
     private static String gerarJsonRequest(String pergunta) {
-        String promptFormatado = "me fale o que voce esta recebendo na seguinte pergunta: "+ pergunta;
-        return "{\"contents\":[{\"parts\":[{\"text\":\""+promptFormatado+"\"}]}]}";
+
+        return "{\"contents\":[{\"parts\":[{\"text\":\""+pergunta+"\"}]}]}";
     }
+
+    public static String formatarResposta(String resposta) {
+        resposta = resposta.replaceAll("\\*\\*", ""); // Remove negritos desnecessários
+        resposta = resposta.replaceAll("\\s+", " "); // Substitui múltiplos espaços por um único espaço
+        resposta = resposta.replaceAll("\\n\\s*", " "); // Normaliza quebras de linha
+        resposta = resposta.trim(); // Remove espaços em branco no início e no fim
+        resposta = resposta.replaceAll("\\.\\s*", ". "); // Garante espaço após pontos
+        resposta = resposta.replaceAll(",\\s*", ", "); // Garante espaço após vírgulas
+
+        return resposta;
+    }
+
 }

@@ -3,18 +3,21 @@ package financaPessoal.controller;
 import financaPessoal.models.ContaModel;
 import financaPessoal.repository.ContaRepository;
 import financaPessoal.services.ConsomeAPI;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/conta")
+@Tag(name = "Gemini Controller", description = "Controlador para análise financeira usando uma API externa.")
 public class GeminiController {
 
     @Autowired
@@ -27,25 +30,23 @@ public class GeminiController {
         this.consomeAPI = consomeAPI;
     }
 
-    /**
-     * Endpoint para analisar as transações de uma conta
-     * @param id Identificador da conta
-     * @return Resposta da API externa com análise das transações
-     */
-    @PostMapping("/{id}/analise")
-    public ResponseEntity<Object> gemini(@PathVariable UUID id) {
+    @Operation(
+            summary = "Analisar todas as contas do usuário",
+            description = "Gera uma análise financeira consolidada com base nas transações de todas as contas do usuário, identificando oportunidades de economia e pontos de melhoria financeira."
+    )
+    @PostMapping("/analise-geral")
+    public ResponseEntity<Object> gemini() {
         try {
-            // Verifica se a conta existe no banco
-            Optional<ContaModel> contaOptional = contaRepository.findById(id);
-            if (contaOptional.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Conta não encontrada.");
+            // Busca todas as contas no banco de dados
+            List<ContaModel> contas = contaRepository.findAll();
+
+            if (contas.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhuma conta encontrada.");
             }
 
-            ContaModel conta = contaOptional.get();
-
-            // Formata as transações da conta em uma string legível
-            String transacoesFormatadas = conta.getTransacoes()
-                    .stream()
+            // Formata as transações de todas as contas em uma única string
+            String transacoesFormatadas = contas.stream()
+                    .flatMap(conta -> conta.getTransacoes().stream())
                     .map(transacao -> String.format(
                             "Descrição: %s, Tipo: %s, Valor: %.2f, Data: %s",
                             transacao.getDescricao(),
@@ -56,13 +57,14 @@ public class GeminiController {
                     .collect(Collectors.joining("; "));
 
             // Gera a pergunta para a API usando as transações formatadas
-            String pergunta = "Faça uma analise de como esse usuario poderia economizar, o quanto ele gastou e o que ele poderia melhorar na questão financeira: " + transacoesFormatadas;
+            String pergunta = "forneça uma visão geral sobre como o usuário pode economizar, pontos de melhoria financeira, e hábitos que ele pode adotar: " + transacoesFormatadas + ", um detalhe importante é que deve ser um texto corrido, como um arquivo txt, não pode ter titulo, nem quebra de linha, nem nada de especial, apenas o texto em si";
 
-            // Chama o service ConsomeAPI para fazer a requisição
+            // Chama o serviço ConsomeAPI para fazer a requisição
             String resposta = ConsomeAPI.fazerPergunta(pergunta);
 
-            // Retorna a resposta da API
-            return ResponseEntity.status(HttpStatus.OK).body(resposta);
+            String respostaFormatada = ConsomeAPI.formatarResposta(resposta);
+
+            return ResponseEntity.status(HttpStatus.OK).body(respostaFormatada);
 
         } catch (IOException | InterruptedException e) {
             // Trata possíveis erros durante a chamada à API
@@ -70,4 +72,3 @@ public class GeminiController {
         }
     }
 }
-
